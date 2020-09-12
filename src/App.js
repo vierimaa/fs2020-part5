@@ -7,10 +7,14 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { useDispatch } from 'react-redux'
+import { showNotification } from './reducers/notificationReducer'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({ content: null, type: null })
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -40,12 +44,7 @@ const App = () => {
 
     } catch (exception) {
       console.log('error', exception)
-      setNotification(
-        { content: 'Wrong username or password!', type: 'error' }
-      )
-      setTimeout(() => {
-        setNotification({ content: null, type: null })
-      }, 5000)
+      dispatch(showNotification({ content: 'Wrong username or password!', class:'error' }, 5))
     }
   }
 
@@ -68,12 +67,7 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject)
       console.log(returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
-      setNotification(
-        { content:`New blog ${returnedBlog.title} added`, type:'notification' }
-      )
-      setTimeout(() => {
-        setNotification({ content: null, type: null })
-      }, 5000)
+      dispatch(showNotification({ content:`New blog ${returnedBlog.title} added`, class:'notification' }, 5))
     } catch (exception) {
       console.log('error', exception)
     }
@@ -98,8 +92,6 @@ const App = () => {
 
   const deleteBlog = async (id) => {
     try {
-      // const blogToDelete = blogs.find((blog) => blog.id === id)
-      // console.log('hi from delete', id, blogToDelete)
       await blogService.remove(id)
       setBlogs(blogs.filter((blog) => blog.id !== id))
 
@@ -136,7 +128,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notification} />
+      <Notification />
       <h1>Blog website</h1>
       {user === null ?
         loginForm() :
