@@ -15,7 +15,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   const handleDelete = () => {
     const cofirmDelete = window.confirm(`Do you really want to delete blog "${blog.title}"?`)
     if(cofirmDelete) {
-      deleteBlog(blog.id)
+      deleteBlog(blog)
     } else {
       return
     }
@@ -38,7 +38,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
         {blog.url}
       </div>
       <div className='likes'>
-        Likes {blog.likes}<button onClick={() => likeBlog(blog.id)}>Like</button>
+        Likes {blog.likes}<button onClick={() => likeBlog(blog)}>Like</button>
       </div>
       
     </div>
