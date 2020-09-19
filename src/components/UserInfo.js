@@ -1,10 +1,13 @@
 import React from 'react'
+import { Link } from "react-router-dom"
 
-const UserInfo = ({ name, numBlogs }) => {
+// <Link to={`/anecdotes/${anecdote.id}`}><li key={anecdote.id} >{anecdote.content}</li></Link>
+
+const UserInfo = ({ user }) => {
   return (
     <tr>
-        <td>{name}</td>
-        <td>{numBlogs}</td>
+        <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
+        <td>{user.blogs.length}</td>
       </tr>
   )
 

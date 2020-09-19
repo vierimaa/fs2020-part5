@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link, useParams
+  Switch, Route, Link
 } from "react-router-dom"
+
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import UserPage from './components/UserPage'
 import UserInfo from './components/UserInfo'
+
 import userService from './services/users'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -106,14 +109,11 @@ const App = () => {
             <tbody>
               {allUsers.map(user =>
                 <UserInfo
-                  name={user.name}
-                  numBlogs={user.blogs.length}
+                  user={user}
                 />
               )}
             </tbody>
-            
-          </table>
-          
+          </table> 
         </div>
       )
     } else {
@@ -132,25 +132,29 @@ const App = () => {
       <h1>Blog website</h1>
 
       <Switch>
+        <Route path="/users/:id">
+          <UserPage users={allUsers}/>
+        </Route>
         <Route path="/users">
-        {userList()}
+          {userList()}
         </Route>
         <Route path="/">
-        <div>
-        {user === null ?
-          loginForm() :
           <div>
-            {user.name} Logged in
-            <button onClick={handleLogout}>
-              Logout
-            </button>
-            {blogForm()}
-            {blogList()}
+            {user === null ?
+              loginForm() :
+              <div>
+                {user.name} Logged in
+                <button onClick={handleLogout}>
+                  Logout
+                </button>
+                {blogForm()}
+                {blogList()}
+              </div>
+            }
           </div>
-        }
-      </div>
         </Route>
       </Switch>
+      
     </Router>
     
   )
