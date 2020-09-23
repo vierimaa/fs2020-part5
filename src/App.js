@@ -11,6 +11,7 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import UserPage from './components/UserPage'
 import UserInfo from './components/UserInfo'
+import SingleBlog from './components/SingleBlog'
 
 import userService from './services/users'
 
@@ -19,11 +20,39 @@ import { showNotification } from './reducers/notificationReducer'
 import { initBlogs, newBlog, deleteBlog, likeBlog } from './reducers/blogReducer'
 import { logUser, initUser, clearUser } from './reducers/userReducer'
 
-const App = () => {
+const Navbar = () => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const handleLogout = () => {
+    dispatch(clearUser())
+  }
+
   const padding = {
     padding: 5
   }
 
+  const navStyle = {
+    backgroundColor: 'plum'
+  }
+
+  if (user) {
+    return (
+      <div style={navStyle}>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+        <b>{user.name} logged in</b>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    )
+  }
+  return (
+    <div style={navStyle}>
+    </div>
+  )
+  
+}
+
+const App = () => {
   const [allUsers, setAllUsers] = useState([])
   
   const dispatch = useDispatch()
@@ -43,10 +72,6 @@ const App = () => {
 
   const handleSubmit = (loginObject) => {
     dispatch(logUser(loginObject))
-  }
-
-  const handleLogout = () => {
-    dispatch(clearUser())
   }
 
   const loginForm = () => (
@@ -123,15 +148,14 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        <Link style={padding} to="/">home</Link>
-        <Link style={padding} to="/users">users</Link>
-      </div>
-
+      <Navbar />
       <Notification />
       <h1>Blog website</h1>
 
       <Switch>
+        <Route path="/blogs/:id">
+          <SingleBlog blogs={blogs} likeBlog={handleLikeBlog}/>
+        </Route>
         <Route path="/users/:id">
           <UserPage users={allUsers}/>
         </Route>
@@ -143,10 +167,6 @@ const App = () => {
             {user === null ?
               loginForm() :
               <div>
-                {user.name} Logged in
-                <button onClick={handleLogout}>
-                  Logout
-                </button>
                 {blogForm()}
                 {blogList()}
               </div>
@@ -154,9 +174,8 @@ const App = () => {
           </div>
         </Route>
       </Switch>
-      
-    </Router>
-    
+
+    </Router>  
   )
 }
 

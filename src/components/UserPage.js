@@ -5,7 +5,7 @@ const UserPage = ({ users }) => {
   const id = useParams().id
   const user = users.find(u => u.id === id)
 
-  if (users.length > 0){
+  if (users.length > 0) {
     return (
       <div>
         <h1>{user.name}</h1>
@@ -16,7 +16,7 @@ const UserPage = ({ users }) => {
       </div>
     )
   } else {
-    return <div></div>
+    return <div>Loading...</div>
   }
 }
 

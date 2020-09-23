@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 
-// <Link to={`/anecdotes/${anecdote.id}`}><li key={anecdote.id} >{anecdote.content}</li></Link>
-
 const UserInfo = ({ user }) => {
   return (
     <tr>
