@@ -20,7 +20,9 @@ import { showNotification } from './reducers/notificationReducer'
 import { initBlogs, newBlog, deleteBlog, likeBlog } from './reducers/blogReducer'
 import { logUser, initUser, clearUser } from './reducers/userReducer'
 
-const Navbar = () => {
+import { Navbar, Nav, Table, Button } from 'react-bootstrap'
+
+const Menu = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
   const handleLogout = () => {
@@ -31,22 +33,31 @@ const Navbar = () => {
     padding: 5
   }
 
-  const navStyle = {
-    backgroundColor: 'plum'
-  }
-
   if (user) {
     return (
-      <div style={navStyle}>
-        <Link style={padding} to="/">blogs</Link>
-        <Link style={padding} to="/users">users</Link>
-        <b>{user.name} logged in</b>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
+      <Navbar bg="dark" variant="dark">
+        <div class="container">
+          <Nav className="mr-auto">
+            <Nav.Item>
+              <Link style={padding} to="/">blogs</Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Link style={padding} to="/users">users</Link>
+            </Nav.Item>
+            <Nav.Item>
+              <em>{user.name} logged in</em>
+            </Nav.Item>
+            <Nav.Item>
+              <Button onClick={handleLogout}>Logout</Button>
+            </Nav.Item>
+          </Nav>
+        </div>
+      </Navbar>
+      
     )
   }
   return (
-    <div style={navStyle}>
+    <div>
     </div>
   )
   
@@ -124,7 +135,7 @@ const App = () => {
       return(
         <div>
           <h2>Users</h2>
-          <table>
+          <Table striped>
             <thead>
               <tr>
                 <th>user</th>
@@ -138,7 +149,7 @@ const App = () => {
                 />
               )}
             </tbody>
-          </table> 
+          </Table>
         </div>
       )
     } else {
@@ -148,33 +159,34 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar />
-      <Notification />
-      <h1>Blog website</h1>
+      <Menu />
+      <div class="container">
+        <Notification />
+        <h1>Blog website</h1>
 
-      <Switch>
-        <Route path="/blogs/:id">
-          <SingleBlog blogs={blogs} likeBlog={handleLikeBlog}/>
-        </Route>
-        <Route path="/users/:id">
-          <UserPage users={allUsers}/>
-        </Route>
-        <Route path="/users">
-          {userList()}
-        </Route>
-        <Route path="/">
+        <Switch>
+          <Route path="/blogs/:id">
+            <SingleBlog blogs={blogs} likeBlog={handleLikeBlog}/>
+          </Route>
+          <Route path="/users/:id">
+            <UserPage users={allUsers}/>
+          </Route>
+          <Route path="/users">
+            {userList()}
+          </Route>
+          <Route path="/">
           <div>
-            {user === null ?
-              loginForm() :
-              <div>
-                {blogForm()}
-                {blogList()}
-              </div>
-            }
-          </div>
-        </Route>
-      </Switch>
-
+              {user === null ?
+                loginForm() :
+                <div>
+                  {blogForm()}
+                  {blogList()}
+                </div>
+              }
+            </div>
+          </Route>
+        </Switch>
+      </div>
     </Router>  
   )
 }
